@@ -1,0 +1,69 @@
+import RPi.GPIO as GPIO
+import tkinter as tk
+
+# Set up GPIO for the first set of LEDs (updated pins and variable names)
+GPIO.setmode(GPIO.BCM)
+GREEN_PIN = 22
+BLUE_PIN = 23
+RED_PIN = 18
+
+
+# Configure the pins as output for the updated set
+GPIO.setup(RED_PIN, GPIO.OUT)
+GPIO.setup(GREEN_PIN, GPIO.OUT)
+GPIO.setup(BLUE_PIN, GPIO.OUT)
+
+# Function to turn off all LEDs in the updated set
+def turn_off_leds_b():
+    GPIO.output(RED_PIN, GPIO.LOW)
+    GPIO.output(GREEN_PIN, GPIO.LOW)
+    GPIO.output(BLUE_PIN, GPIO.LOW)
+
+# Function to turn on the selected LED in the updated set
+def light_up_led_b(led_option):
+    turn_off_leds_b()  # Turn off all LEDs first
+    if led_option == 1:
+        GPIO.output(RED_PIN, GPIO.HIGH)
+    elif led_option == 2:
+        GPIO.output(GREEN_PIN, GPIO.HIGH)
+    elif led_option == 3:
+        GPIO.output(BLUE_PIN, GPIO.HIGH)
+
+# Handle the selection from the radio buttons for the updated set
+def choose_led_b():
+    selected_led = led_choice_b.get()
+    light_up_led_b(selected_led)
+
+# Exit the application and clean up GPIO for the updated set
+def close_app_b():
+    turn_off_leds_b()
+    GPIO.cleanup()
+    window.quit()
+
+# Create the main window for the updated set of LEDs
+window = tk.Tk()
+window.title("LED Controller - Set B")
+
+# Variable to store the selected LED for the updated set
+led_choice_b = tk.IntVar()
+
+# Create the UI for the updated set of LEDs
+label_b = tk.Label(window, text="Control LEDs - Set B", font=("Arial", 20))
+label_b.pack(pady=10)
+
+led_radio_b1 = tk.Radiobutton(window, text="Red LED", variable=led_choice_b, value=1, command=choose_led_b)
+led_radio_b2 = tk.Radiobutton(window, text="Green LED", variable=led_choice_b, value=2, command=choose_led_b)
+led_radio_b3 = tk.Radiobutton(window, text="Blue LED", variable=led_choice_b, value=3, command=choose_led_b)
+
+led_radio_b1.pack(anchor=tk.W, padx=20)
+led_radio_b2.pack(anchor=tk.W, padx=20)
+led_radio_b3.pack(anchor=tk.W, padx=20)
+
+reset_button_b = tk.Button(window, text="Turn Off All", command=turn_off_leds_b)
+reset_button_b.pack(pady=10)
+
+exit_button_b = tk.Button(window, text="Exit", command=close_app_b)
+exit_button_b.pack(pady=10)
+
+# Main loop to keep the window open
+window.mainloop()
